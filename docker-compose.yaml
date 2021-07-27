@@ -1,0 +1,42 @@
+version: "3.9"
+services:
+#  express:
+#    container_name: express
+#    image: node:alpine
+#    volumes:
+#      - ./express/:/app
+#    working_dir: /app
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - database
+#    networks:
+#      - backend
+
+  database:
+    container_name: database_container
+    build:
+      context: ./database
+    volumes:
+      - type: bind
+        source: ./database/data
+        target: /var/lib/mysql
+
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    environment:
+      PMA_HOST: database
+    links:
+      - database:database
+    ports:
+      - 8080:80
+    restart: always

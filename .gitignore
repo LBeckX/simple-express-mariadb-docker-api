@@ -1,0 +1,4 @@
+/database/data
+
+# Project exclude paths
+/express/node_modules/
